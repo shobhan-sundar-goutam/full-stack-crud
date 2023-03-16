@@ -1,4 +1,24 @@
+import { useEffect, useState } from "react";
+
 const UserList = () => {
+  const [infos, setInfos] = useState(null);
+
+  const getInfos = async () => {
+    const res = await fetch("/getinfo", {
+      method: "GET",
+    });
+    const { userInfos } = await res.json();
+
+    if (userInfos.length > 0) {
+      setInfos(userInfos);
+    }
+    console.log(userInfos);
+  };
+
+  useEffect(() => {
+    getInfos();
+  }, [infos]);
+
   return (
     <section className="text-gray-600 body-font">
       <div className="container px-5 py-24 mx-auto">
@@ -26,16 +46,22 @@ const UserList = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td className="px-4 py-3">One</td>
-                <td className="px-4 py-3">Two</td>
-                <td className="px-4 py-3">
-                  <button className="hover:text-green-500">Edit</button>
-                </td>
-                <td className="px-4 py-3 text-lg text-gray-900">
-                  <button className="hover:text-red-500">Delete</button>
-                </td>
-              </tr>
+              {infos &&
+                infos.map((info) => {
+                  const { _id, name, email } = info;
+                  return (
+                    <tr key={_id}>
+                      <td className="px-4 py-3">{name}</td>
+                      <td className="px-4 py-3">{email}</td>
+                      <td className="px-4 py-3">
+                        <button className="hover:text-green-500">Edit</button>
+                      </td>
+                      <td className="px-4 py-3 text-lg text-gray-900">
+                        <button className="hover:text-red-500">Delete</button>
+                      </td>
+                    </tr>
+                  );
+                })}
             </tbody>
           </table>
         </div>
