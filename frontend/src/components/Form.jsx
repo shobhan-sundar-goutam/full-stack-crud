@@ -6,8 +6,50 @@ const Form = () => {
     email: "",
   });
 
-  const handleSubmit = (e) => {
+  const handleInput = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+
+    setInput({ ...input, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const { name, email } = input;
+
+    if (!(name && email)) {
+      return alert("Empty fields are not allowed");
+    }
+
+    const regEx = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/g;
+
+    if (!regEx.test(email)) {
+      return alert("Invalid email");
+    }
+
+    const res = await fetch("/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name, email }),
+    });
+
+    const data = await res.json();
+
+    if (data.status === 400) {
+      window.alert("All fields are required");
+      console.log("All fields are required");
+    } else if (!data) {
+      window.alert("User info creation failed");
+      console.log("User info creation failed");
+    } else {
+      window.alert("User info created successfully");
+      console.log("User info created successfully");
+    }
+
+    setInput({ name: "", email: "" });
   };
 
   return (
@@ -33,8 +75,10 @@ const Form = () => {
                     type="text"
                     id="name"
                     name="name"
+                    value={input.name}
                     className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                     onChange={handleInput}
+                    required
                   />
                 </div>
               </div>
@@ -50,8 +94,10 @@ const Form = () => {
                     type="email"
                     id="email"
                     name="email"
+                    value={input.email}
                     className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                     onChange={handleInput}
+                    required
                   />
                 </div>
               </div>
