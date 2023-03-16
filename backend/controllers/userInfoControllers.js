@@ -15,7 +15,7 @@ const createInfo = async (req, res) => {
 
     const userInfoExists = await UserInfo.findOne({ email });
     if (userInfoExists) {
-      res.status(401).send("This email already exists");
+      res.status(400).send("This email already exists");
       throw new Error("This email already exists");
     }
 
