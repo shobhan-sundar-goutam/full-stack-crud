@@ -74,7 +74,7 @@ const editInfo = async (req, res) => {
 
 const deleteInfo = async (req, res) => {
   try {
-    const userInfo = await UserInfo.findByIdAndDelete(req.params.id, req.body);
+    const userInfo = await UserInfo.findByIdAndDelete(req.params.id);
 
     res.status(200).json({
       success: true,
