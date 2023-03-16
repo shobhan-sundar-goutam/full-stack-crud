@@ -12,12 +12,19 @@ const UserList = () => {
     if (userInfos.length > 0) {
       setInfos(userInfos);
     }
-    console.log(userInfos);
   };
 
   useEffect(() => {
     getInfos();
   }, [infos]);
+
+  const deleteInfo = async (id) => {
+    const res = await fetch(`/delete/${id}`, {
+      method: "DELETE",
+    });
+    const data = res.json();
+    console.log(data);
+  };
 
   return (
     <section className="text-gray-600 body-font">
@@ -54,10 +61,20 @@ const UserList = () => {
                       <td className="px-4 py-3">{name}</td>
                       <td className="px-4 py-3">{email}</td>
                       <td className="px-4 py-3">
-                        <button className="hover:text-green-500">Edit</button>
+                        <button
+                          className="hover:text-green-500"
+                          // onClick={() => editInfo(_id)}
+                        >
+                          Edit
+                        </button>
                       </td>
                       <td className="px-4 py-3 text-lg text-gray-900">
-                        <button className="hover:text-red-500">Delete</button>
+                        <button
+                          className="hover:text-red-500"
+                          onClick={() => deleteInfo(_id)}
+                        >
+                          Delete
+                        </button>
                       </td>
                     </tr>
                   );
