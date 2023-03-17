@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 
-const UserList = () => {
+const UserList = ({ BASE_URL }) => {
   const [infos, setInfos] = useState(null);
 
   const getInfos = async () => {
-    const res = await fetch("/getinfo", {
+    const res = await fetch(`${BASE_URL}/getinfo`, {
       method: "GET",
     });
     const { userInfos } = await res.json();
@@ -28,7 +28,7 @@ const UserList = () => {
       return alert("Invalid email");
     }
 
-    const res = await fetch(`/edit/${id}`, {
+    const res = await fetch(`${BASE_URL}/edit/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -40,7 +40,7 @@ const UserList = () => {
   };
 
   const deleteInfo = async (id) => {
-    const res = await fetch(`/delete/${id}`, {
+    const res = await fetch(`${BASE_URL}/delete/${id}`, {
       method: "DELETE",
     });
     const data = await res.json();

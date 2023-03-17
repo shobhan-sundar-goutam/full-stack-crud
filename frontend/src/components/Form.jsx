@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const Form = () => {
+const Form = ({ BASE_URL }) => {
   const [input, setInput] = useState({
     name: "",
     email: "",
@@ -13,42 +13,44 @@ const Form = () => {
     setInput({ ...input, [name]: value });
   };
 
+  const submitData = async () => {
+    try {
+      const { name, email } = input;
+
+      if (!(name && email)) {
+        return alert("Empty fields are not allowed");
+      }
+
+      const regEx = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/g;
+
+      if (!regEx.test(email)) {
+        return alert("Invalid email");
+      }
+
+      const res = await fetch(`${BASE_URL}/create`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email }),
+      });
+
+      const data = await res.json();
+      console.log(data);
+
+      if (data.success) {
+        window.alert("User info created successfully");
+        console.log("User info created successfully");
+      }
+    } catch (error) {
+      window.alert(error.message);
+      console.log(error.message);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const { name, email } = input;
-
-    if (!(name && email)) {
-      return alert("Empty fields are not allowed");
-    }
-
-    const regEx = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/g;
-
-    if (!regEx.test(email)) {
-      return alert("Invalid email");
-    }
-
-    const res = await fetch("/create", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name, email }),
-    });
-
-    const data = await res.json();
-
-    if (data.status === 400) {
-      window.alert("All fields are required");
-      console.log("All fields are required");
-    } else if (!data) {
-      window.alert("User info creation failed");
-      console.log("User info creation failed");
-    } else {
-      window.alert("User info created successfully");
-      console.log("User info created successfully");
-    }
-
+    submitData();
     setInput({ name: "", email: "" });
   };
 
