@@ -1,7 +1,7 @@
 import Form from "./components/Form";
 import UserList from "./components/UserList";
 
-const BASE_URL = "https://full-stack-crud-production-9122.up.railway.app/";
+const BASE_URL = "https://full-stack-crud-production-9122.up.railway.app";
 
 function App() {
   return (
