@@ -14,17 +14,42 @@ const UserList = () => {
     }
   };
 
-  useEffect(() => {
-    getInfos();
-  }, [infos]);
+  const editInfo = async (id) => {
+    const name = prompt("Enter the updated name:-");
+    const email = prompt("Enter the updated email:-");
+
+    if (!(name && email)) {
+      return alert("Empty fields are not allowed");
+    }
+
+    const regEx = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/g;
+
+    if (!regEx.test(email)) {
+      return alert("Invalid email");
+    }
+
+    const res = await fetch(`/edit/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name, email }),
+    });
+    const data = await res.json();
+    console.log(data);
+  };
 
   const deleteInfo = async (id) => {
     const res = await fetch(`/delete/${id}`, {
       method: "DELETE",
     });
-    const data = res.json();
+    const data = await res.json();
     console.log(data);
   };
+
+  useEffect(() => {
+    getInfos();
+  }, [infos]);
 
   return (
     <section className="text-gray-600 body-font">
@@ -63,7 +88,7 @@ const UserList = () => {
                       <td className="px-4 py-3">
                         <button
                           className="hover:text-green-500"
-                          // onClick={() => editInfo(_id)}
+                          onClick={() => editInfo(_id)}
                         >
                           Edit
                         </button>
