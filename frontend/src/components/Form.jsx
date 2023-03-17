@@ -1,4 +1,5 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 const Form = ({ BASE_URL }) => {
   const [input, setInput] = useState({
@@ -18,13 +19,13 @@ const Form = ({ BASE_URL }) => {
       const { name, email } = input;
 
       if (!(name && email)) {
-        return alert("Empty fields are not allowed");
+        return toast.error("Empty fields are not allowed");
       }
 
       const regEx = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/g;
 
       if (!regEx.test(email)) {
-        return alert("Invalid email");
+        return toast.error("Invalid email");
       }
 
       const res = await fetch(`${BASE_URL}/create`, {
@@ -39,11 +40,10 @@ const Form = ({ BASE_URL }) => {
       console.log(data);
 
       if (data.success) {
-        window.alert("User info created successfully");
-        console.log("User info created successfully");
+        toast.success("User Info created successfully");
       }
     } catch (error) {
-      window.alert(error.message);
+      toast.error(error.message);
       console.log(error.message);
     }
   };

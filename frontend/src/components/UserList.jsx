@@ -1,48 +1,65 @@
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 const UserList = ({ BASE_URL }) => {
   const [infos, setInfos] = useState(null);
 
   const getInfos = async () => {
-    const res = await fetch(`${BASE_URL}/getinfo`, {
-      method: "GET",
-    });
-    const { userInfos } = await res.json();
+    try {
+      const res = await fetch(`${BASE_URL}/getinfo`, {
+        method: "GET",
+      });
+      const { userInfos } = await res.json();
 
-    setInfos(userInfos);
+      setInfos(userInfos);
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   const editInfo = async (id) => {
-    const name = prompt("Enter the updated name:-");
-    const email = prompt("Enter the updated email:-");
+    try {
+      const name = prompt("Enter the updated name:-");
+      const email = prompt("Enter the updated email:-");
 
-    if (!(name && email)) {
-      return alert("Empty fields are not allowed");
+      if (!(name && email)) {
+        return toast.error("Empty fields are not allowed");
+      }
+
+      const regEx = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/g;
+
+      if (!regEx.test(email)) {
+        return toast.error("Invalid email");
+      }
+
+      const res = await fetch(`${BASE_URL}/edit/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email }),
+      });
+      const data = await res.json();
+      console.log(data);
+
+      toast.success("User Info edited successfully");
+    } catch (error) {
+      toast.error(error.message);
     }
-
-    const regEx = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/g;
-
-    if (!regEx.test(email)) {
-      return alert("Invalid email");
-    }
-
-    const res = await fetch(`${BASE_URL}/edit/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name, email }),
-    });
-    const data = await res.json();
-    console.log(data);
   };
 
   const deleteInfo = async (id) => {
-    const res = await fetch(`${BASE_URL}/delete/${id}`, {
-      method: "DELETE",
-    });
-    const data = await res.json();
-    console.log(data);
+    try {
+      const res = await fetch(`${BASE_URL}/delete/${id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      console.log(data);
+
+      toast.success("User Info deleted successfully");
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   useEffect(() => {
