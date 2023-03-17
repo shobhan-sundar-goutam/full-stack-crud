@@ -9,9 +9,9 @@ const UserList = ({ BASE_URL }) => {
     });
     const { userInfos } = await res.json();
 
-    if (userInfos.length > 0) {
-      setInfos(userInfos);
-    }
+    // if (userInfos.length > 0) {
+    setInfos(userInfos);
+    // }
   };
 
   const editInfo = async (id) => {
